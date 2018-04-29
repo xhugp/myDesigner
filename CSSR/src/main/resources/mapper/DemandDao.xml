@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.DemandDao">
+    <!-- 查询所有记录 -->
+    <select id="list" resultType="com.xhu.entity.Demand">
+        SELECT *
+        FROM demand
+        WHERE 1 = 1
+        <if test="demand.demandType != null">
+          AND  demand_type = #{demand.demandType}
+        </if>
+        <if test="demand.demandState != null">
+            AND  demand_state = #{demand.demandState}
+        </if>
+        <if test="demand.companyId != null">
+            AND  company_id = #{demand.companyId}
+        </if>
+        AND create_time BETWEEN #{demand.fromTime} AND  #{demand.toTime}
+        ORDER BY last_update_time
+        <if test=" index != null and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <!-- 查询记录总数 -->
+    <select id="getCount" resultType="int" parameterType="com.xhu.entity.Demand">
+        SELECT count(1)
+        FROM demand
+        WHERE 1 = 1
+        <if test="demandType != null">
+            AND  demand_type = #{demandType}
+        </if>
+        <if test="demandState != null">
+            AND  demand_state = #{demandState}
+        </if>
+        <if test="companyId != null">
+            AND  company_id = #{companyId}
+        </if>
+        AND create_time BETWEEN #{fromTime} AND  #{toTime}
+    </select>
+
+    <!-- 根据Demand id查询 -->
+    <select id="queryById" resultType="com.xhu.entity.Demand">
+        SELECT *
+        FROM demand
+        WHERE demand_id = #{demandId}
+    </select>
+
+    <select id="getState"  resultType="java.lang.String">
+        SELECT demand_state
+        FROM demand
+        WHERE demand_id = #{demandId}
+    </select>
+
+    <!--添加记录 -->
+    <insert id="add" parameterType="com.xhu.entity.Demand">
+        <selectKey keyProperty="demandId" keyColumn="demand_id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into demand (demand_id,demand_type,demand_title,demand_content,demand_remark,demand_repay,demand_state,company_id,create_time,last_update_time)
+        values
+        (#{demandId},#{demandType},#{demandTitle},#{demandContent},#{demandRemark},#{demandRepay},#{demandState},#{CompanyId},#{createTime},#{lastUpdateTime})
+    </insert>
+
+    <!--修改记录 -->
+    <update id="update" parameterType="com.xhu.entity.Demand">
+        update demand
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" demandType != null ">
+                demand_type = #{demandType},
+            </if>
+            <if test=" demandTitle != null ">
+                demand_title = #{demandTitle},
+            </if>
+            <if test=" demandContent != null ">
+                demand_content = #{demandContent},
+            </if>
+            <if test=" demandRemark != null ">
+                demand_remark = #{demandRemark},
+            </if>
+            <if test=" demandRepay != null ">
+                demand_repay = #{demandRepay},
+            </if>
+            <if test=" demandState != null ">
+                demand_state = #{demandState},
+            </if>
+            <if test=" lastUpdateTime != null ">
+                last_update_time = #{lastUpdateTime},
+            </if>
+        </trim>
+        where demand_id = #{demandId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+        demand
+        WHERE
+        demand_id = #{demandId}
+    </delete>
+
+    <!-- 批量删除 使用list-->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from demand where demand_id in
+        <foreach collection="list" index="index" item="item"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

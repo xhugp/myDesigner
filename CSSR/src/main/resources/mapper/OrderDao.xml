@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.OrderDao">
+    <select id="list" resultType="com.xhu.entity.Order">
+       SELECT * FROM orders
+       WHERE 1 = 1
+        <if test="order.userId != null">
+            AND user_id = #{order.userId}
+        </if>
+        <if test="order.demandId != null">
+            AND demand_id = #{order.demandId}
+        </if>
+        <if test="order.orderState != null">
+            AND order_state = #{order.orderState}
+        </if>
+        <if test="order.companyId != null">
+            AND company_id = #{order.companyId}
+        </if>
+        AND create_time BETWEEN #{order.fromTime} AND  #{order.toTime}
+        ORDER BY order_id
+        <if test=" index != null and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+    <select id="getOrder" resultType="com.xhu.entity.Order">
+        SELECT * FROM orders
+        WHERE order_id = #{orderId}
+    </select>
+    <select id="getCount" resultType="int" parameterType="com.xhu.entity.Order">
+        SELECT count(1)
+        FROM orders
+        WHERE 1 = 1
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        <if test="demandId != null">
+            AND demand_id = #{demandId}
+        </if>
+        <if test="orderState != null">
+            AND order_state = #{orderState}
+        </if>
+        <if test="companyId != null">
+            AND company_id = #{companyId}
+        </if>
+        AND create_time BETWEEN #{fromTime} AND  #{toTime}
+    </select>
+
+    <insert id="add" parameterType="com.xhu.entity.Order">
+        <selectKey keyProperty="orderId" keyColumn="order_id" resultType="java.lang.String"
+                   order="BEFORE">
+            SELECT replace(uuid(),'-','') FROM dual
+        </selectKey>
+        INSERT INTO orders(order_id,order_title,user_id,demand_id,company_id,create_time,last_update_time)
+        VALUES (#{orderId},#{orderTitle},#{userId},#{demandId},#{companyId},#{createTime},#{lastUpdateTime})
+    </insert>
+
+    <update id="update" parameterType="com.xhu.entity.Order">
+        UPDATE orders
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" orderState != null ">
+                order_state = #{orderState},
+            </if>
+            <if test=" orderScore != null ">
+                order_score = #{orderScore},
+            </if>
+        </trim>
+        WHERE order_id = #{orderId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM orders
+        WHERE order_id = #{orderId}
+    </delete>
+
+    <select id="userId_list" resultType="java.lang.Integer" parameterType="com.xhu.entity.Order">
+        SELECT DISTINCT user_id from orders
+        WHERE company_id = #{companyId} AND order_state = #{orderState}
+        ORDER BY last_update_time DESC
+    </select>
+
+    <select id="getLately" parameterType="com.xhu.entity.Order" resultType="com.xhu.entity.Order">
+        SELECT *
+        FROM orders
+        WHERE company_id = #{companyId}
+        AND user_id = #{userId}
+        AND order_state = #{orderState}
+        ORDER BY last_update_time DESC
+        limit 0,1
+    </select>
+</mapper>

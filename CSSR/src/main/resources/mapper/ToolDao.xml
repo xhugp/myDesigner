@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.ToolDao">
+    <select id="list" resultType="com.xhu.entity.Tool">
+        SELECT *
+        FROM tool
+        WHERE 1 = 1
+        <if test="tool.toolType != null">
+            AND tool_type = #{tool.toolType}
+        </if>
+        <if test="tool.toolState != null">
+            AND tool_state = #{tool.toolState}
+        </if>
+        <if test="tool.companyId != null">
+            AND company_id = #{tool.companyId}
+        </if>
+        ORDER BY tool_id
+        <if test=" index != null  and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <select id="getTool" resultType="com.xhu.entity.Tool">
+        SELECT *
+        FROM tool
+        WHERE tool_id = #{toolId}
+    </select>
+
+    <select id="getCount" resultType="int" parameterType="com.xhu.entity.Tool">
+        SELECT count(1)
+        FROM tool
+        WHERE 1 = 1
+        <if test="toolType != null">
+            AND tool_type = #{toolType}
+        </if>
+        <if test="toolState != null">
+            AND tool_state = #{toolState}
+        </if>
+        <if test="companyId != null">
+            AND company_id = #{companyId}
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.xhu.entity.Tool">
+        INSERT INTO tool(tool_type,tool_name,tool_des,tool_img,company_id)
+        VALUES (#{toolType},#{toolName},#{toolDes},#{toolImg},#{companyId})
+    </insert>
+
+    <update id="update" parameterType="com.xhu.entity.Tool">
+        UPDATE tool
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" toolType != null ">
+                tool_type = #{toolType},
+            </if>
+            <if test=" toolDes != null ">
+                tool_des = #{toolDes},
+            </if>
+            <if test=" toolImg != null ">
+                tool_img = #{toolImg},
+            </if>
+            <if test=" toolName != null ">
+                tool_name = #{toolName},
+            </if>
+            <if test=" toolState != null ">
+                tool_state = #{toolState},
+            </if>
+        </trim>
+        WHERE tool_id = #{toolId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tool
+        WHERE tool_id = #{toolId}
+    </delete>
+</mapper>

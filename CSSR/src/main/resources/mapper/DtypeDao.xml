@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.DtypeDao">
+    <select id="getName">
+        SELECT name
+        FROM dtype
+        WHERE id = #{id}
+    </select>
+
+
+    <insert id="add" parameterType="com.xhu.entity.Dtype">
+        INSERT INTO dtype(name)
+        VALUES (#{name})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM dtype
+        where id = #{id}
+    </delete>
+
+    <select id="list" resultType="com.xhu.entity.Dtype">
+        select *
+        from dtype
+    </select>
+</mapper>

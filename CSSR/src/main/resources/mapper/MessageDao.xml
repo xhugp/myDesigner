@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.MessageDao">
+    <select id="list" resultType="com.xhu.entity.Message">
+        SELECT *
+        FROM message
+        WHERE 1 = 1
+        <if test="mes.companyId != null">
+            AND company_id = #{mes.companyId}
+        </if>
+        <if test="mes.mesState != null">
+            AND mes_state = #{mes.mesState}
+        </if>
+        AND create_time BETWEEN #{mes.fromTime} AND  #{mes.toTime}
+        ORDER BY mes_id
+        <if test=" index != null and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <select id="getMes" resultType="com.xhu.entity.Message">
+        SELECT *
+        FROM message
+        WHERE mes_id = #{mesId}
+    </select>
+
+    <select id="getCount" resultType="int" parameterType="com.xhu.entity.Message">
+        SELECT count(1)
+        FROM message
+        WHERE 1 = 1
+        <if test="companyId != null">
+            AND company_id = #{companyId}
+        </if>
+        <if test="mesState != null">
+            AND mes_state = #{mesState}
+        </if>
+        AND create_time BETWEEN #{fromTime} AND  #{toTime}
+    </select>
+
+    <insert id="add" parameterType="com.xhu.entity.Message">
+        <selectKey keyProperty="mesId" keyColumn="mes_id" resultType="java.lang.String"
+                   order="BEFORE">
+            SELECT replace(uuid(),'-','') FROM dual
+        </selectKey>
+        INSERT INTO message (mes_id,mes_content,mes_state,company_id,create_time)
+        VALUES (#{mesId},#{mesContent},#{mesState},#{companyId},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.xhu.entity.Message">
+        UPDATE message
+        <trim prefix="set" suffixOverrides=",">
+            <if test="mesState != null">
+                mes_state = #{mesState},
+            </if>
+        </trim>
+        WHERE mes_id = #{mesId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM message
+        WHERE mes_id = #{mesId}
+    </delete>
+</mapper>

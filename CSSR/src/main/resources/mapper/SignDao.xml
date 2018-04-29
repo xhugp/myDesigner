@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.SignDao">
+
+    <select id="list" resultType="com.xhu.entity.Sign">
+        SELECT *
+        FROM sign
+        WHERE company_id = #{sign.companyId}
+        AND sign_date BETWEEN #{sign.fromTime} AND  #{sign.toTime}
+        ORDER BY user_id
+        <if test=" index != null and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer" parameterType="com.xhu.entity.Sign">
+        SELECT count(1)
+        FROM sign
+        WHERE company_id = #{companyId}
+        AND sign_date BETWEEN #{fromTime} AND  #{toTime}
+    </select>
+
+
+
+    <select id="getSign" parameterType="com.xhu.entity.Sign" resultType="com.xhu.entity.Sign">
+        SELECT * FROM sign
+        WHERE 1 = 1
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        <if test="companyId != null">
+            AND company_id = #{companyId}
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="com.xhu.entity.Sign">
+        DELETE  FROM sign
+        WHERE userId = #{userId} AND companyId = #{companyId}
+    </delete>
+
+    <insert id="add" parameterType="com.xhu.entity.Sign">
+        INSERT INTO sign(user_id,company_id,signTime,signDate)
+        VALUES (#{userId},#{companyId},#{signTime},#{signDate})
+    </insert>
+
+</mapper>

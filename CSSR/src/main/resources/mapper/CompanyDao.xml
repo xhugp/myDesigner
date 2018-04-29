@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.CompanyDao">
+    <select id="getCompany" resultType="com.xhu.entity.Company">
+        SELECT *
+        FROM company
+        WHERE company_id = #{companyId}
+    </select>
+
+    <update id="update" parameterType="com.xhu.entity.Company">
+        UPDATE company
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" companyName != null ">
+                company_name = #{companyName},
+            </if>
+            <if test=" companyAddress != null ">
+                company_address = #{companyAddress},
+            </if>
+            <if test=" companyLocation != null ">
+                company_location = #{companyLocation},
+            </if>
+            <if test=" companyScore != null ">
+                company_score = #{companyScore},
+            </if>
+            <if test=" companyPhone != null ">
+                company_phone = #{companyPhone},
+            </if>
+            <if test=" companyEmail != null ">
+                company_email = #{companyEmail},
+            </if>
+        </trim>
+        WHERE company_id = #{companyId}
+    </update>
+</mapper>
+

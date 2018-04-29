@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.LReqDao">
+    <select id="list" resultType="com.xhu.entity.LReq">
+        SELECT *
+        FROM lreq
+        WHERE 1 = 1
+        <if test="lReq.companyId != null">
+            AND  company_id = #{lReq.companyId}
+        </if>
+        <if test="lReq.userId != null">
+            AND  user_id = #{lReq.userId}
+        </if>
+        <if test="lReq.lReqResult != null">
+            AND  l_req_result = #{lReq.lReqResult}
+        </if>
+        AND l_req_create_time BETWEEN #{lReq.fromTime} AND  #{lReq.toTime}
+        ORDER BY l_req_create_time
+        <if test=" index != null and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <select id="getLReq" resultType="com.xhu.entity.LReq">
+        SELECT *
+        FROM lreq
+        WHERE l_req_id = #{lReqId}
+    </select>
+
+    <select id="check" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM lreq
+        WHERE user_id = #{userId} AND tool_id = #{toolId} AND l_req_result = "0"
+    </select>
+
+    <select id="getCount" parameterType="com.xhu.entity.LReq" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM lreq
+        WHERE 1 = 1
+        <if test="companyId != null">
+            AND  company_id = #{companyId}
+        </if>
+        <if test="userId != null">
+            AND  user_id = #{userId}
+        </if>
+        <if test="lReqResult != null">
+            AND  l_req_result = #{lReqResult}
+        </if>
+        AND l_req_create_time BETWEEN #{fromTime} AND  #{toTime}
+    </select>
+
+    <insert id="add" parameterType="com.xhu.entity.LReq">
+        INSERT INTO lreq(user_id,company_id,tool_id,l_req_money,l_req_term,l_req_content,l_req_create_time)
+        VALUES (#{userId},#{companyId},#{toolId},#{lReqMoney},#{lReqTerm},#{lReqContent},#{lReqCreateTime})
+    </insert>
+
+    <update id="update" parameterType="com.xhu.entity.LReq">
+        UPDATE lreq
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" lReqResult != null ">
+              l_req_result = #{lReqResult},
+            </if>
+            <if test=" lReqHandleTime != null ">
+              l_req_handle_time = #{lReqHandleTime},
+            </if>
+        </trim>
+        WHERE l_req_id = #{lReqId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM lreq
+        WHERE l_req_id = #{lReqId}
+    </delete>
+
+</mapper>

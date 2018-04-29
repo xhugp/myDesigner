@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.UserDao">
+
+
+    <select id="getUser" resultType="com.xhu.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="getUserByName" resultType="com.xhu.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_name = #{userName}
+    </select>
+
+    <select id="getCount" resultType="int" parameterType="com.xhu.entity.User">
+        SELECT count(1)
+        FROM user
+        WHERE 1 = 1
+        <if test="userScore != null">
+            AND  user_score = #{userScore}
+        </if>
+        <if test="companyId != null">
+            AND  company_id = #{companyId}
+        </if>
+        <if test="userMc != null">
+            AND user_mc LIKE CONCAT('%',#{userMc},'%')
+        </if>
+    </select>
+
+    <select id="list" resultType="com.xhu.entity.User">
+        SELECT *
+        FROM user
+        WHERE 1 = 1
+        <if test="user.userScore != null">
+            AND  user_score = #{user.userScore}
+        </if>
+        <if test="user.companyId != null">
+            AND  company_id = #{user.companyId}
+        </if>
+        <if test="user.userMc != null">
+            AND user_mc LIKE CONCAT('%',#{user.userMc},'%')
+        </if>
+        ORDER BY user_id
+        <if test=" index != null  and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <select id="list_lately" resultType="com.xhu.entity.User" parameterType="java.util.HashMap">
+        SELECT *
+        FROM user
+        WHERE user_id IN
+        <foreach collection="userIds" index="index" item="item"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND company_id is NULL
+        <if test=" index != null  and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+
+    <!--添加记录 -->
+    <insert id="add" parameterType="com.xhu.entity.User">
+        insert into user (user_name,user_pwd,user_mc,user_sex,user_phone,user_email,user_address,user_open_id,company_id)
+        values
+        (#{userName},#{userPwd},#{userMc},#{userSex},#{userPhone},#{userEmail},#{userAddress},#{userOpenId},#{companyId})
+    </insert>
+
+    <update id="update" parameterType="com.xhu.entity.User">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" userPwd != null ">
+                user_pwd = #{userPwd},
+            </if>
+            <if test=" userMc != null ">
+                user_mc = #{userMc},
+            </if>
+            <if test=" userSex != null ">
+                user_sex = #{userSex},
+            </if>
+            <if test=" userPhone != null ">
+                user_phone = #{userPhone},
+            </if>
+            <if test=" userEmail != null ">
+                user_email = #{userEmail},
+            </if>
+            <if test=" userAddress != null ">
+                user_address = #{userAddress},
+            </if>
+            <if test=" userScore != null ">
+                user_score = #{userScore},
+            </if>
+            <if test=" companyId != null ">
+                company_id = #{companyId},
+            </if>
+        </trim>
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM user
+        WHERE user_id = #{userId}
+    </delete>
+
+
+
+</mapper>
