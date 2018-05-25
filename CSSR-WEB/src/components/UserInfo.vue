@@ -146,7 +146,8 @@
       },
       methods : {
         handleCurrentChange(val){
-          console.log(val);
+          this.sendData.currentPage = val;
+          this.submitForm();
         },
         handleShowSign(index,row){
           let sign = {

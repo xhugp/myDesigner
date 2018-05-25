@@ -39,7 +39,8 @@
                 disabled
                 show-score
                 text-color="#ff9900"
-                score-template="{value}">
+                score-template="{value}"
+                style="margin-top: 10px">
               </el-rate>
                 </span>
               </el-form-item>

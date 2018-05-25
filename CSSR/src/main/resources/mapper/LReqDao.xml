@@ -69,6 +69,12 @@
         WHERE l_req_id = #{lReqId}
     </update>
 
+    <update id="updateBatch" parameterType="com.xhu.entity.LReq">
+        UPDATE lreq
+        SET l_req_result = #{lReqResult}, l_req_handle_time = #{lReqHandleTime}
+        WHERE l_req_id != #{lReqId} AND tool_id = #{toolId}
+    </update>
+
     <delete id="delete">
         DELETE FROM lreq
         WHERE l_req_id = #{lReqId}

@@ -93,6 +93,7 @@ public class LReqServiceImpl implements LReqService {
             }
             Date date = new Date();
             lReq.setlReqHandleTime(commonUtil.dateToString(date));
+
             if("1".equals(lReq.getlReqResult())){
                 Tool tool = new Tool();
                 tool.setToolId(lReq.getToolId());
@@ -110,6 +111,12 @@ public class LReqServiceImpl implements LReqService {
                     if (result < 1) {
                         throw new LReqException(CodeEnum.TOOLSTATE);
                     }
+                    LReq lReq1 = new LReq();
+                    lReq1.setlReqResult("2");
+                    lReq1.setlReqId(lReq.getlReqId());
+                    lReq1.setlReqHandleTime(lReq.getlReqHandleTime());
+                    lReq1.setToolId(lReq.getToolId());
+                    lReqDao.updateBatch(lReq1);
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(date);
                     calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(lReq.getlReqTerm()));

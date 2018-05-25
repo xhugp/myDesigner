@@ -13,7 +13,7 @@ public interface LeaseDao {
 
     public Lease getLease(String leaseId);
 
-    public Lease getLeaseByTool(Integer toolId);
+    public Lease getLeaseByTool(Lease lease);
 
     public Lease getLeaseByUser(@Param("toolId") Integer toolId,@Param("userId") Integer userId);
 

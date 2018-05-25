@@ -30,7 +30,7 @@ public class SreqController {
     }
 
     @RequestMapping(value = "/sreq/{srId}",method = RequestMethod.DELETE)
-    private ResultBean delete(@PathVariable Integer srId){
+    private ResultBean delete(@PathVariable("srId") Integer srId){
         sreqService.delete(srId);
         return new ResultBean("200","删除成功");
     }
@@ -48,7 +48,7 @@ public class SreqController {
     }
 
     @RequestMapping(value = "/sreq/{srId}",method = RequestMethod.GET)
-    private ResultBean get(@PathVariable Integer srId){
-        return new ResultBean("200",sreqService.getLReq(srId),"查看请求");
+    private ResultBean get(@PathVariable("srId") Integer srId){
+        return new ResultBean("200",sreqService.getSreq(srId),"查看请求");
     }
 }

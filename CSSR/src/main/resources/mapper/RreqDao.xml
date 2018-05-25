@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhu.dao.RreqDao">
+    <select id="list" resultType="com.xhu.entity.Rreq">
+        SELECT *
+        FROM rreq
+        WHERE 1 = 1
+        <if test="rreq.companyId != null">
+            AND  company_id = #{rreq.companyId}
+        </if>
+        <if test="rreq.userId != null">
+            AND  user_id = #{rreq.userId}
+        </if>
+        <if test="rreq.rreqState != null">
+            AND  rreq_state = #{rreq.rreqState}
+        </if>
+        AND create_time BETWEEN #{rreq.fromTime} AND  #{rreq.toTime}
+        ORDER BY create_time
+        <if test=" index != null and size != null">
+            limit #{index},#{size}
+        </if>
+    </select>
+
+    <select id="getRreq" resultType="com.xhu.entity.Rreq">
+        SELECT *
+        FROM rreq
+        WHERE rreq_id = #{rreqId}
+    </select>
+
+    <select id="check" resultType="java.lang.Integer" parameterType="com.xhu.entity.Rreq">
+        SELECT count(1)
+        FROM rreq
+        WHERE user_id = #{userId} AND company_id = #{companyId}
+    </select>
+
+    <select id="getCount" parameterType="com.xhu.entity.Rreq" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM rreq
+        WHERE 1 = 1
+        <if test="companyId != null">
+            AND  company_id = #{companyId}
+        </if>
+        <if test="userId != null">
+            AND  user_id = #{userId}
+        </if>
+        <if test="rreqState != null">
+            AND  rreq_state = #{rreqState}
+        </if>
+        AND create_time BETWEEN #{fromTime} AND  #{toTime}
+    </select>
+
+    <insert id="add" parameterType="com.xhu.entity.Rreq">
+        INSERT INTO rreq(user_id,company_id,recruit_id,rreq_state,create_time,rreq_content)
+        VALUES (#{userId},#{companyId},#{recruitId},#{rreqState},#{createTime},#{rreqContent})
+    </insert>
+
+    <update id="update" parameterType="com.xhu.entity.Rreq">
+        UPDATE rreq
+        <trim prefix="set" suffixOverrides=",">
+            <if test=" rreqState != null ">
+                rreq_state = #{rreqState},
+            </if>
+        </trim>
+        WHERE rreq_id = #{rreqId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM rreq
+        WHERE rreq_id = #{rreqId}
+    </delete>
+
+</mapper>

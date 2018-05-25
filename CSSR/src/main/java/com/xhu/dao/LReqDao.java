@@ -21,5 +21,7 @@ public interface LReqDao {
 
     public int getCount(LReq lReq);
 
+    public int updateBatch(LReq lReq);
+
     public int check(@Param("userId") Integer userId,@Param("toolId") Integer toolId);
 }

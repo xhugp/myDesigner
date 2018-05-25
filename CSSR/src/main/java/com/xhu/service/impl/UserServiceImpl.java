@@ -61,7 +61,9 @@ public class UserServiceImpl implements UserService{
             PageBean pageBean = new PageBean(pageSize,count,currentPage);
             List<User> users = userDao.list(pageBean.getIndex(),pageBean.getSize(),user);
             for (User newUser: users) {
-                newUser.setUserPwd(commonUtil.EncoderByMd5(newUser.getUserPwd()));
+                if(newUser.getUserPwd() != null) {
+                    newUser.setUserPwd(commonUtil.EncoderByMd5(newUser.getUserPwd()));
+                }
             }
             pageBean.setDatas(users);
             return pageBean;
@@ -90,7 +92,9 @@ public class UserServiceImpl implements UserService{
             map.put("userIds",list);
             List<User> users = userDao.list_lately(map);
             for (User newUser: users) {
-                newUser.setUserPwd(commonUtil.EncoderByMd5(newUser.getUserPwd()));
+                if(newUser.getUserPwd() != null) {
+                    newUser.setUserPwd(commonUtil.EncoderByMd5(newUser.getUserPwd()));
+                }
             }
             pageBean.setDatas(users);
             return pageBean;
@@ -103,7 +107,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void add(User user) {
         try {
-            if(user.getUserName() == null && user.getUserPwd() == null){
+            if(user.getUserName() == null){
                 throw new UserException(CodeEnum.PARAMETER);
             }
             int result = userDao.add(user);
@@ -148,7 +152,9 @@ public class UserServiceImpl implements UserService{
             }
             User user = userDao.getUser(userId);
             if(null != user){
-                user.setUserPwd(commonUtil.EncoderByMd5(user.getUserPwd()));
+                if(user.getUserPwd()!=null) {
+                    user.setUserPwd(commonUtil.EncoderByMd5(user.getUserPwd()));
+                }
                 return user;
             }else {
                 throw new UserException(CodeEnum.NONUSER);
@@ -169,4 +175,52 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    @Override
+    public User getUserByOpenId(String userOpenId) {
+        try {
+            if(userOpenId == null){
+                throw new UserException(CodeEnum.PARAMETER);
+            }
+            User user = userDao.getUserByOpenId(userOpenId);
+            if(null != user){
+                if(user.getUserPwd()!=null) {
+                    user.setUserPwd(commonUtil.EncoderByMd5(user.getUserPwd()));
+                }
+                return user;
+            }else {
+                throw new UserException(CodeEnum.NONUSER);
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public User getUserByName(String username) {
+        try {
+            if(username == null){
+                throw new UserException(CodeEnum.PARAMETER);
+            }
+            User user = userDao.getUserByName(username);
+            if(null != user){
+                if(user.getUserPwd()!=null) {
+                    user.setUserPwd(commonUtil.EncoderByMd5(user.getUserPwd()));
+                }
+                return user;
+            }else {
+                throw new UserException(CodeEnum.NONUSER);
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public List<User> simple_list(Integer companyId) {
+        try{
+            return userDao.simple_list(companyId);
+        }catch (Exception e){
+            throw new UserException(CodeEnum.SELECTUSER);
+        }
+    }
 }

@@ -15,6 +15,8 @@ public interface OrderService {
 
     public Order getOrder(String orderId);
 
+    public Order getOrderByDemand(String demandId);
+
     public void add(Order order);
 
     public void delete(String orderId);

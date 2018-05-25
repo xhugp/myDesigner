@@ -15,9 +15,9 @@ public interface LeaseService {
 
     public void add(Lease lease);
 
-    public void update(Lease lease);
+    public void update(Lease lease,boolean isOver);
 
-    public void updateState(Lease lease);
+    public void updateOver(Lease lease);
 
     public void delete(String leaseId);
 

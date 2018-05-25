@@ -35,6 +35,8 @@ public class CommonUtil {
     @Autowired
     private TtypeDao ttypeDao;
     @Autowired
+    private RtypeDao rtypeDao;
+    @Autowired
     private RoleDao roleDao;
     @Autowired
     private MessageDao messageDao;
@@ -59,6 +61,7 @@ public class CommonUtil {
 
     private static List<Dtype> dtype_list = null;
     private static List<Ttype> ttype_list = null;
+    private static List<Rtype> rtype_list = null;
     private static List<Role> role_list = null;
 
     private static Map<Integer,String> dtype_map = null;
@@ -236,11 +239,55 @@ public class CommonUtil {
         }
         return ttype_list;
     }
+
+    public List<Rtype> getRtype_list(){
+        if(null == rtype_list){
+            return rtypeDao.list();
+        }
+        return rtype_list;
+    }
+
     public List<Role> getRole_list(){
         if(null == role_list){
             return roleDao.list();
         }
         return role_list;
+    }
+
+    public void addDtype(Dtype dtype){
+        try {
+            dtypeDao.add(dtype);
+            dtype_list = dtypeDao.list();
+        }catch (Exception e){
+            throw new RuntimeException("内部错误");
+        }
+    }
+
+    public void addTtype(Ttype ttype){
+        try {
+            ttypeDao.add(ttype);
+            ttype_list = ttypeDao.list();
+        }catch (Exception e){
+            throw new RuntimeException("内部错误");
+        }
+    }
+
+    public void addRtype(Rtype rtype){
+        try {
+            rtypeDao.add(rtype);
+            rtype_list = rtypeDao.list();
+        }catch (Exception e){
+            throw new RuntimeException("内部错误");
+        }
+    }
+
+    public void addRole(Role role){
+        try {
+            roleDao.add(role);
+            role_list = roleDao.list();
+        }catch (Exception e){
+            throw new RuntimeException("内部错误");
+        }
     }
 
     /**

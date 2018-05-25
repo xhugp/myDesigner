@@ -16,6 +16,8 @@ import LeaseHistory from '@/components/LeaseHistory'
 import LeaseInfo from '@/components/LeaseInfo'
 import LeaseRequest from '@/components/LeaseRequest'
 import OrderRequest from '@/components/OrderRequest'
+import Recruit from '@/components/Recruit'
+import Appointment from '@/components/Appointment'
 import Version from '@/components/Version'
 import AddDemand from '@/components/AddDemand'
 import ToolManage from '@/components/ToolManage'
@@ -75,6 +77,14 @@ const router =  new Router({
           path:'factory-info',
           name:'factory-info',
           component:FactoryInfo
+        },{
+          path:'recruit',
+          name:'recruit',
+          component:Recruit
+        },{
+          path:'appointment',
+          name:'appointment',
+          component:Appointment
         },{
           path:'user-lately',
           name:'user-lately',

@@ -33,4 +33,10 @@ public class LeaseController {
         PageBean pageBean = leaseService.list(currentPage,pageSize,lease);
         return new ResultBean("200",pageBean,"需求列表");
     }
+
+    @RequestMapping(value = "/lease/over",method = RequestMethod.POST)
+    private ResultBean handleover(@RequestBody Lease lease){
+        leaseService.updateOver(lease);
+        return new ResultBean("200",null,"租赁结束");
+    }
 }

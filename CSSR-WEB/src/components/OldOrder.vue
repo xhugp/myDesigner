@@ -23,6 +23,7 @@
         <el-button type="primary" @click="resetForm" icon="el-icon-refresh">重置</el-button>
       </el-form>
 
+
       <el-table
         :data="orders"
         style="width: 100%"
@@ -62,63 +63,50 @@
               size="mini"
               type="primary"
               @click="handleShowDemand(scope.$index, scope.row)" icon="el-icon-view">需求信息</el-button>
-              <el-popover
-                ref="popover1"
-                placement="bottom"
-                title="评分"
-                width="200"
-                trigger="click"
-                @hide = "clear">
 
-                <div class="block">
+            <el-tooltip placement="top" v-if="scope.row.orderState == '2'" effect="light">
+              <div slot="content">
+                <div class="block" v-if="scope.row.orderState == '2' && scope.row.orderScore<=0">
                   <el-rate
                     v-model="starValue"
                     :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
                     show-text
                   ></el-rate>
                   <el-button
-                      size="mini"
-                      type="primary"
-                      @click="handleStar(scope.$index, scope.row)">提交评分</el-button>
+                    size="mini"
+                    type="primary"
+                    @click="handleStar(scope.$index, scope.row)">提交评分</el-button>
                 </div>
 
-              </el-popover>
-
-            <el-popover
-              ref="popover2"
-              placement="bottom"
-              title="评分"
-              width="200"
-              trigger="click"
-              @hide = "clear">
-
-              <div class="block">
-                <el-rate
-                  v-model="scope.row.orderScore"
-                  :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                  show-text
-                  disabled
-                ></el-rate>
+                <div class="block" v-if="scope.row.orderState == '2' && scope.row.orderScore>0">
+                  <el-rate
+                    v-model="scope.row.orderScore"
+                    :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                    show-text
+                    disabled
+                  ></el-rate>
+                </div>
               </div>
-            </el-popover>
+              <el-button
+                size="mini"
+                type="primary"
+                v-if="scope.row.orderState == '2' && scope.row.orderScore<=0"
+                icon="el-icon-star-off">评分</el-button>
 
               <el-button
-              size="mini"
-              type="primary"
-              v-if="scope.row.orderState == '2' && scope.row.orderScore == null"
-              icon="el-icon-star-on"
-              v-popover:popover1>评分</el-button>
+                size="mini"
+                type="primary"
+                v-if="scope.row.orderState == '2' && scope.row.orderScore>0"
+                icon="el-icon-star-on">查看评分</el-button>
 
-            <el-button
-              size="mini"
-              type="primary"
-              v-if="scope.row.orderState == '2' && scope.row.orderScore != null"
-              icon="el-icon-star-on"
-              v-popover:popover2>查看评分</el-button>
+              <el-button></el-button>
+            </el-tooltip>
+
 
           </template>
         </el-table-column>
       </el-table>
+
 
 
 
@@ -134,6 +122,11 @@
           </el-form-item>
           <el-form-item label="需求类型：">
             <span>{{ demand.typeName }}</span>
+          </el-form-item>
+          <el-form-item label="图片：">
+            <div class="imgDiv" style="width: 50%">
+              <img :src="demand.demandImg" style="max-width: 100%;max-height: 100%"/>
+            </div>
           </el-form-item>
           <el-form-item label="需求备注：">
             <span>{{ demand.demandRemark }}</span>
@@ -216,7 +209,6 @@
             this.sendData.order.companyId = sessionStorage.getItem("companyId");
             this.$http.post('/api/order/list',this.sendData).then((res)=>{
               if(res.body.code =="200") {
-                console.log(res);
                 this.totalSize = res.body.data.totalSize;
                 this.orders = res.body.data.datas;
               }else{
@@ -234,7 +226,6 @@
           handleShowDemand(index,row) {
             this.$http.get("/api/demand/get/"+row.demandId).then((res)=>{
               if(res.body.code == 200){
-                console.log(res);
                 this.demand = res.body.data;
                 this.dialogDemandVisible = true;
               }else{
@@ -248,9 +239,9 @@
           },
           tableRowStyle(row,index){
             if (row.row.orderState == '2') {
-              return 'background:oldlace';
-            }else if(row.row.orderState == '3'){
               return 'background:#f0f9eb';
+            }else if(row.row.orderState == '3'){
+              return 'background:oldlace';
             }else if(row.row.orderState == '4'){
               return 'background:#FFCCCC';
             }
@@ -269,7 +260,7 @@
             this.$http.post("/api/order/star",send).then((res)=>{
               if(res.body.code == "200"){
                 this.$message.success("评分成功");
-                row.orderScore = this.starValue;
+                this.submitForm();
               }else{
                 this.$message.success("评分失败");
                 console.log(res);

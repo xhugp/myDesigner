@@ -6,7 +6,9 @@
           <h1>汽修协作系统·客户端</h1>
         </div>
         <div class="userinfo">
-          <span>欢迎您：{{manageMc}}</span>
+          <span>欢迎您：</span>
+          <span v-if="manageMc!=null">{{manageMc}}</span>
+          <span v-if="manageMc==null">{{manageName}}</span>
           <span>上次登录：{{lastTime}}</span>
         </div>
       </el-header>
@@ -71,6 +73,18 @@
                   -->
                 </el-menu-item-group>
               </el-submenu>
+
+              <el-submenu index="9">
+                <template slot="title">
+                  <i class="el-icon-date"></i>
+                  <span>招聘管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/home/recruit">招聘管理</el-menu-item>
+                  <el-menu-item index="/home/appointment">应聘预约</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+
               <el-submenu index="2">
                 <template slot="title">
                   <i class="el-icon-star-off"></i>

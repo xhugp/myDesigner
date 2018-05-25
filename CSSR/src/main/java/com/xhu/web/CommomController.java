@@ -1,6 +1,10 @@
 package com.xhu.web;
 
 import com.xhu.dto.ResultBean;
+import com.xhu.entity.Dtype;
+import com.xhu.entity.Role;
+import com.xhu.entity.Rtype;
+import com.xhu.entity.Ttype;
 import com.xhu.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,6 +55,12 @@ public class CommomController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/get-rtype",method = RequestMethod.GET)
+    public ResultBean getRtype() {
+        return new ResultBean("200", commonUtil.getRtype_list(), "招聘对象");
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/get-role",method = RequestMethod.GET)
     public ResultBean getRole(){
         return new ResultBean("200",commonUtil.getRole_list(),"需求类型");
@@ -73,6 +83,32 @@ public class CommomController {
     @RequestMapping(value = "/get-token",method = RequestMethod.GET)
     public ResultBean getToken(){
         return new ResultBean("200",commonUtil.getToken(),"贴图令牌");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/add-dtype",method = RequestMethod.POST)
+    public ResultBean addDtype(@RequestBody Dtype dtype){
+        commonUtil.addDtype(dtype);
+        return new ResultBean("200","添加结果");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/add-rtype",method = RequestMethod.POST)
+    public ResultBean rreqType(@RequestBody Rtype rtype){
+        commonUtil.addRtype(rtype);
+        return new ResultBean("200","添加结果");
+    }
+    @ResponseBody
+    @RequestMapping(value = "/add-role-type",method = RequestMethod.POST)
+    public ResultBean addRole(@RequestBody Role role){
+        commonUtil.addRole(role);
+        return new ResultBean("200","添加结果");
+    }
+    @ResponseBody
+    @RequestMapping(value = "/add-ttype",method = RequestMethod.POST)
+    public ResultBean addTtype(@RequestBody Ttype ttype){
+        commonUtil.addTtype(ttype);
+        return new ResultBean("200","添加结果");
     }
 
     @ResponseBody

@@ -140,7 +140,7 @@
         data(){
           return{
             searchForm:{
-              searchState:'',
+              searchState:'1',
               searchTime:[]
             },
             optionState:[{

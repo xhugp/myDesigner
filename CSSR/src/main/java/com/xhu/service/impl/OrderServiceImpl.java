@@ -74,6 +74,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order getOrderByDemand(String demandId) {
+        try {
+            Order order1 = orderDao.getOrderByDemand(demandId);
+            order1.setUserMc(userDao.getUser(order1.getUserId()).getUserMc());
+            order1.setState(commonUtil.getOrderState(order1.getOrderState()));
+            order1.setCreateTime(commonUtil.formatStringDate(order1.getCreateTime(),true));
+            order1.setLastUpdateTime(commonUtil.formatStringDate(order1.getLastUpdateTime(),true));
+            return order1;
+        }catch (Exception e){
+            throw new OrderException("获取订单信息失败!"+e.getMessage());
+        }
+    }
+
+    @Override
     @Transactional
     public void add(Order order) {
         try {

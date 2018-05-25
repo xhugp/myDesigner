@@ -56,7 +56,7 @@ public class SignServiceImpl implements SignService {
     @Transactional
     public void add(Sign sign) {
         try {
-            if(sign.getUserId() == null && sign.getCompanyId() == null){
+            if(sign.getUserId() == null || sign.getCompanyId() == null || sign.getUserId() == null){
                 throw new SignException("参数错误");
             }
             User user = new User();
@@ -78,7 +78,7 @@ public class SignServiceImpl implements SignService {
     @Transactional
     public void delete(Sign sign) {
         try {
-            if(sign.getUserId() == null && sign.getCompanyId() == null){
+            if(sign.getUserId() == null || sign.getCompanyId() == null){
                 throw new SignException("参数错误");
             }
             User user = new User();

@@ -14,6 +14,8 @@ public interface OrderDao {
 
     public Order getOrder(String orderId);
 
+    public Order getOrderByDemand(String demandId);
+
     public int add(Order order);
 
     public int delete(String orderId);

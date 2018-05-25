@@ -29,6 +29,14 @@ public class DemandController {
         return new ResultBean("200",pageBean,"需求列表");
     }
 
+    @RequestMapping(value = "/demand/demand-user",method = RequestMethod.POST)
+    private ResultBean demandUser(@RequestBody Map<String,Object> reqMap){
+        String demandId = (String) reqMap.get("demandId");
+        Integer userId = (Integer) reqMap.get("userId");
+
+        return null;
+    }
+
     @RequestMapping(value = "/demand/get/{demandId}",method = RequestMethod.GET)
     private ResultBean get(@PathVariable String demandId){
         return  new ResultBean("200",demandService.queryById(demandId),"单个需求信息");
@@ -52,13 +60,13 @@ public class DemandController {
         return new ResultBean("200","重提成功");
     }
 
-    @RequestMapping(value = "demand/delete/{demandId}",method = RequestMethod.POST)
+    @RequestMapping(value = "demand/delete/{demandId}",method = RequestMethod.DELETE)
     private ResultBean delete(@PathVariable("demandId") String demandId){
         demandService.deleteById(demandId);
         return new ResultBean("200","删除单个成功");
     }
 
-    @RequestMapping(value = "demand/delete-batch/{demandIds}",method = RequestMethod.POST)
+    @RequestMapping(value = "demand/delete-batch/{demandIds}",method = RequestMethod.DELETE)
     private ResultBean deleteBatch(@PathVariable String demandIds){
         demandService.deleteBatch(demandIds);
         return new ResultBean("200","批量删除成功");

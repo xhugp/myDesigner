@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api/': {
-        //target:'http://xhugp.nat300.top/api',
-        target:'http://127.0.0.1:8888/api',
+        target:'http://xhugp.nat300.top/api',
+        //target:'http://127.0.0.1:8888/api',
         changeOrigin: true,
         pathRewrite: {
           '^/api':''

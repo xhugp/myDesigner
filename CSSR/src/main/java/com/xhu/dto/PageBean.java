@@ -33,7 +33,7 @@ public class PageBean<T> {
     }
 
     public void setPageSize(Integer pageSize) {
-        if(pageSize!=null) {
+        if(pageSize!=null && pageSize > 0) {
             this.pageSize = pageSize;
             size = this.pageSize;
         }

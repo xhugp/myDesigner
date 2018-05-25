@@ -18,7 +18,7 @@
             AND  company_id = #{demand.companyId}
         </if>
         AND create_time BETWEEN #{demand.fromTime} AND  #{demand.toTime}
-        ORDER BY last_update_time
+        ORDER BY last_update_time DESC
         <if test=" index != null and size != null">
             limit #{index},#{size}
         </if>
@@ -60,9 +60,9 @@
                    order="BEFORE">
             select replace(uuid(),'-','') from dual
         </selectKey>
-        insert into demand (demand_id,demand_type,demand_title,demand_content,demand_remark,demand_repay,demand_state,company_id,create_time,last_update_time)
+        insert into demand (demand_id,demand_type,demand_title,demand_content,demand_img,demand_remark,demand_repay,demand_state,company_id,create_time,last_update_time)
         values
-        (#{demandId},#{demandType},#{demandTitle},#{demandContent},#{demandRemark},#{demandRepay},#{demandState},#{CompanyId},#{createTime},#{lastUpdateTime})
+        (#{demandId},#{demandType},#{demandTitle},#{demandContent},#{demandImg},#{demandRemark},#{demandRepay},#{demandState},#{CompanyId},#{createTime},#{lastUpdateTime})
     </insert>
 
     <!--修改记录 -->

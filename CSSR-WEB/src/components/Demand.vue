@@ -77,10 +77,14 @@
             <el-form-item label="最近更新：">
               <span>{{ props.row.lastUpdateTime }}</span>
             </el-form-item>
+            <el-form-item label="图片：">
+              <div class="imgDiv" style="width: 50%">
+                <img :src="props.row.demandImg"/>
+              </div>
+            </el-form-item>
             <el-form-item label="备注：">
               <span>{{ props.row.demandRemark }}</span>
             </el-form-item>
-
           </el-form>
         </template>
       </el-table-column>
@@ -105,6 +109,7 @@
       </el-table-column>
       <el-table-column label="操作" width="300px">
         <template slot-scope="scope">
+
           <el-button
             size="mini"
             @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit">编辑</el-button>
@@ -112,6 +117,33 @@
           size="mini"
           type="danger"
           @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete">删除</el-button>
+
+          <el-popover
+            placement="bottom"
+            width="400"
+            v-if="scope.row.demandState == '1'"
+            trigger="click">
+            <el-select v-model="seluser" placeholder="请选择">
+              <el-option
+                v-for="item in users"
+                :key="item.userId"
+                :label="item.userMc"
+                :value="item.userId">
+              </el-option>
+            </el-select>
+            <el-button
+            size="mini"
+            type="primary"
+            @click="submitSelect(scope.$index, scope.row)"
+            >确定</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              slot="reference">派工</el-button>
+          </el-popover>
+
+
+
           <el-button
             size="mini"
             type="primary"
@@ -149,6 +181,7 @@
             v-model="newDemand.demandContent">
           </el-input>
         </el-form-item>
+
         <el-form-item label="需求备注">
         <el-input
           type="textarea"
@@ -196,6 +229,10 @@
     width: 100%;
     height: 100%;
   }
+  img{
+    max-width: 100%;
+    max-height: 100%;
+  }
 </style>
 
 <script>
@@ -204,6 +241,11 @@
       data(){
         return {
           demands : [],
+          users:[{
+            userId:1,
+            userMc:'asi'
+          }],
+          seluser:'',
           newDemand:{},
           deleteList:[],
           dialogFormVisible: false,
@@ -254,6 +296,10 @@
           this.options = res.body.data;
         });
         this.loading = false;
+
+        this.$http.get("/api/user/simple-list/"+sessionStorage.getItem("companyId")).then((res)=> {
+          this.users = res.body.data;
+        });
       },
       filters:{
         formatMoney:function(val){
@@ -332,7 +378,7 @@
             type: 'warning'
           }).then(() => {
             //请求删除需求
-            this.$http.post('/api/demand/delete/'+row.demandId).then((res)=>{
+            this.$http.delete('/api/demand/delete/'+row.demandId).then((res)=>{
               if(res.body.code == '200'){
                 this.$message({
                   type: 'success',
@@ -443,7 +489,7 @@
             type: 'warning'
           }).then(() => {
             //请求删除需求
-            this.$http.post('/api/demand/delete-batch/'+ demandArr.toString()).then((res)=>{
+            this.$http.delete('/api/demand/delete-batch/'+ demandArr.toString()).then((res)=>{
               //console.log(res);
               if(res.body.code == '200'){
                 this.$message({
@@ -463,6 +509,20 @@
               type: 'info',
               message: '已取消删除'
             });
+          });
+        },
+        submitSelect(index, row){
+          let data = {
+            demandId : row.demandId,
+            userId : this.seluser
+          };
+          this.$http.post('/api/order/add',data).then((res)=>{
+            if(res.body.code =="200") {
+              this.$message.success("派工成功");
+              this.submitForm();
+            }else{
+              console.log(res);
+            }
           });
         }
 

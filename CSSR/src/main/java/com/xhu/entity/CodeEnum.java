@@ -33,6 +33,7 @@ public enum CodeEnum {
     NONUSER("40902","用户不存在"),
     PWDERROR("40903","密码错误"),
     USERCOUNT("40904","获取用户总数失败"),
+    SELECTUSER("40905","查询用户错误"),
     //Message错误41000
     //Lease错误41100
     //Company错误41200
@@ -41,6 +42,8 @@ public enum CodeEnum {
     //Oreq错误41500
     REOREQ("41501","重复提交请求"),
     OREQCOUNT("41504","获取记录总数失败"),
+    ORDERERROR("41505","订单状态不允许提交申请"),
+    USERERROR("41506","这不是该用户的订单"),
     //Sreq错误41600
     SREQLISTPARAM("41601","列表请求参数错误"),
     SREQDELETEPARAM("41602","删除请求参数错误"),
@@ -49,7 +52,12 @@ public enum CodeEnum {
     SREQREADD("41605","重复请求"),
     SREQADDUSERERROR("41606","用户已经签约"),
     SREQUPDATEPARAM("41607","更新参数错误"),
-    SREQREUPDATE("41608","重复更新");
+    SREQREUPDATE("41608","重复更新"),
+    HANDLEERROR("41609","该请求您无法处理"),
+    //Rreq错误
+    RERREQ("41701","重复应聘");
+
+
 
 
 

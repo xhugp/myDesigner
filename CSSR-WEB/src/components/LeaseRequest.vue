@@ -167,7 +167,7 @@
                   type: 'success',
                   message: '商品已出租'
                 });
-                this.lReqs.pop(row);
+                this.submitForm();
               }else{
                 console.log(res);
                 sendLreq.lReqResult = '0';

@@ -72,7 +72,7 @@ public class SreqServiceImpl implements SreqService {
     }
 
     @Override
-    public Sreq getLReq(Integer srId) {
+    public Sreq getSreq(Integer srId) {
         try {
             if(srId == null){
                 throw new SreqException(CodeEnum.SREQGETPARAM);
@@ -87,18 +87,21 @@ public class SreqServiceImpl implements SreqService {
     @Transactional
     public void update(Sreq sreq) {
         try {
-            if(sreq == null || (sreq.getSrState() != 1&&sreq.getSrState() != 2)){
+            if(sreq == null || (sreq.getSrState() != 1&&sreq.getSrState() != 2) || sreq.getUserId() == null){
                 throw new SreqException(CodeEnum.SREQUPDATEPARAM);
             }
             Sreq sreq1 = sreqDao.getSreq(sreq.getSrId());
-            if(sreq1.getSrState() == 0){
+            if(sreq1.getUserId()!=sreq.getUserId()){
+                throw new SreqException(CodeEnum.HANDLEERROR);
+            }
+            if(sreq1.getSrState() != 0){
                 throw new SreqException(CodeEnum.SREQREUPDATE);
             }
             Date date = new Date();
             sreq.setHandleTime(commonUtil.dateToString(date));
             if(sreq.getSrState() == 1){//同意
                 sreqDao.update(sreq);
-                Sign sign = new Sign(sreq.getUserId(),sreq.getCompanyId(),sreq.getSrTime().toString());
+                Sign sign = new Sign(sreq1.getUserId(),sreq1.getCompanyId(),sreq1.getSrTime().toString());
                 signService.add(sign);
             }
             if(sreq.getSrState() == 2){//拒绝

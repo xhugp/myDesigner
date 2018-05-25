@@ -18,6 +18,7 @@ export default {
       sessionStorage.setItem('manageMc', manage.manageMc);
       sessionStorage.setItem('manageId', manage.manageId);
       sessionStorage.setItem('companyId', manage.companyId);
+      sessionStorage.setItem('manageRole', manage.manageRole);
       sessionStorage.setItem('lastTime', manage.lastLoginTime);
     }
   }

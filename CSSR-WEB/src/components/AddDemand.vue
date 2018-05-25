@@ -20,6 +20,26 @@
       <el-form-item label="需求内容" prop="demandContent">
         <el-input type="textarea" :rows='12' v-model="newDemand.demandContent"  placeholder="请输入需求内容（500以内）" required></el-input>
       </el-form-item>
+
+      <el-form-item label="需求图片"  prop="demandImg">
+        <el-upload
+          action="http://upload.qiniu.com"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :on-remove="handleRemove"
+          :data="postData"
+          accept="image/gif,image/jpeg,image/jpg,image/bmp,image/png"
+          :on-exceed="handleExceed"
+          :limit="1"
+          :on-change="handleChange"
+          list-type="picture"
+          :file-list="fileList"
+          multiple>
+          <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
+          <div class="el-upload__tip" slot="tip">只能上传图片文件，且不超过2M</div>
+        </el-upload>
+      </el-form-item>
+
       <el-form-item label="备注" prop="demandRemark">
         <el-input type="textarea" :rows='4' v-model="newDemand.demandRemark"  placeholder="请输入备注（100以内）"></el-input>
       </el-form-item>
@@ -37,13 +57,19 @@
       data() {
         return {
           options:[],
+          fileList:[],
           newDemand: {
             demandTitle:'',
             demandType:'',
             demandRepay:'',
             demandContent:'',
             demandRemark:'',
-            companyId:''
+            companyId:'',
+            demandImg:''
+          },
+          imageUrl:'',
+          postData:{
+            token:''
           },
           rules: {
             demandTitle: [
@@ -54,7 +80,10 @@
               {type : 'number',required: true, message: '请正确输入薪酬', trigger: 'change'}
             ],
             demandType:[
-              {required: true, message: '请选择需求类型', trigger: 'blur'},
+              {required: true, message: '请选择需求类型', trigger: 'blur,change'},
+            ],
+            demandImg:[
+              {required: false, message: '请上传图片', trigger: 'blur,change'},
             ],
             demandContent: [
               {required: true, message: '请输入需求内容', trigger: 'blur'},
@@ -70,6 +99,7 @@
         submitForm(newDemand) {
           this.$refs[newDemand].validate((valid) => {
             if (valid) {
+              this.newDemand.demandImg = this.imageUrl;
               this.$http.post("/api/demand/add",this.newDemand).then((res)=>{
                 if(res.body.code=='200'){
                   this.$message({
@@ -90,12 +120,36 @@
         },
         resetForm(newDemand) {
           this.$refs[newDemand].resetFields();
+        },
+        handleSuccess(res, file, fileList){
+          this.imageUrl = 'http://p6i3f0nn3.bkt.clouddn.com/'+ res.key;
+        },
+        handleError(res){
+          console.log(res);
+        },
+        handleExceed(file, fileList){
+          this.$message.error("只能上传一张图片，请删除再传");
+        },
+        handleChange(file, fileList) {
+          const isLt2M = file.size / 1024 / 1024 < 2;
+          if (!isLt2M) {
+            this.$message.error('上传图片大小不能超过 2MB!');
+            this.fileList = [];
+            return false;
+          }
+          this.newDemand.demandImg = file.name;
+        },
+        handleRemove(file, fileList){
+          this.newDemand.demandImg = '';
         }
       },
       mounted(){
         this.newDemand.companyId = sessionStorage.getItem("companyId");
         this.$http.get("/api/get-dtype").then((res)=> {
           this.options = res.body.data;
+        });
+        this.$http.get("/api/get-uptoken").then((res)=>{
+          this.postData.token = res.body.data;
         });
       }
     }

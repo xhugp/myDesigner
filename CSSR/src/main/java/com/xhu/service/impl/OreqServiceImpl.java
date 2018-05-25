@@ -105,6 +105,13 @@ public class OreqServiceImpl implements OreqService{
                 demand.setLastUpdateTime(date);
                 orderDao.update(order);
                 demandDao.update(demand);
+            }else if("2".equals(oreq.getOreqResult())){
+                demand.setDemandState("2");//需求处理中
+                order.setOrderState("1");//订单处理中
+                orderDao.update(order);
+                demandDao.update(demand);
+            }else{
+                throw new OreqException(CodeEnum.PARAMETER);
             }
             oreqDao.update(oreq);
         }catch (Exception e){
@@ -119,11 +126,18 @@ public class OreqServiceImpl implements OreqService{
             if(oreq.getOrderId()==null || oreq.getOreqType() == null){
                 throw new OreqException(CodeEnum.PARAMETER);
             }
+
             if(oreqDao.check(oreq.getUserId(),oreq.getOrderId())>0){
                 throw new OreqException(CodeEnum.REOREQ);
             }
             String date = commonUtil.dateToString(new Date());
             Order order = orderDao.getOrder(oreq.getOrderId());
+            if(order.getUserId()!=oreq.getUserId()){
+                throw new OreqException(CodeEnum.USERERROR);
+            }
+            if(!"1".equals(order.getOrderState())){
+                throw new OreqException(CodeEnum.ORDERERROR);
+            }
             if("2".equals(oreq.getOreqType())) {
                 order.setOrderState("3");//将订单状态切成中断
                 order.setLastUpdateTime(date);

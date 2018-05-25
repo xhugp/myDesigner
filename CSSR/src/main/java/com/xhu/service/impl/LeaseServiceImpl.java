@@ -72,7 +72,10 @@ public class LeaseServiceImpl implements LeaseService {
     @Override
     public Lease getLeaseByTool(Integer toolId) {
         try {
-            Lease lease = leaseDao.getLeaseByTool(toolId);
+            Lease ll = new Lease();
+            ll.setLeaseState("1");
+            ll.setToolId(toolId);
+            Lease lease = leaseDao.getLeaseByTool(ll);
             if(lease == null){
                 throw new LeaseException("未找到该工具租赁信息");
             }
@@ -107,9 +110,30 @@ public class LeaseServiceImpl implements LeaseService {
 
     @Override
     @Transactional
-    public void update(Lease lease) {
+    public void update(Lease lease,boolean isOver) {
         try {
-            leaseDao.update(lease);
+            //此处调用支付接口
+            /////////////////
+            if (lease.getLeaseId() == null || lease.getUserId() == null) {
+                throw new LeaseException("更新参数错误");
+            }
+            Lease lease1 = leaseDao.getLease(lease.getLeaseId());
+            if(lease1 == null){
+                throw new LeaseException("未找到租赁信息");
+            }
+            if(!"1".equals(lease1.getLeaseState())){
+                throw new LeaseException("该租赁已经结束");
+            }
+            if(!lease1.getUserId().equals(lease.getUserId())){
+                throw new LeaseException("无权提交");
+            }
+            if (isOver){
+                Tool tool = toolDao.getTool(lease1.getToolId());
+                tool.setToolState("1");
+                toolDao.update(tool);
+                lease1.setLeaseState("2");
+            }
+            leaseDao.update(lease1);
         }catch (Exception e){
             throw new LeaseException("更新租赁信息失败"+e.getMessage());
         }
@@ -117,12 +141,11 @@ public class LeaseServiceImpl implements LeaseService {
 
     @Override
     @Transactional
-    public void updateState(Lease lease) {
+    public void updateOver(Lease lease) {
         try {
-
-            leaseDao.update(lease);
+            update(lease,true);
         }catch (Exception e){
-            throw new LeaseException("更新租赁信息失败"+e.getMessage());
+            throw new LeaseException("结束订单失败"+e.getMessage());
         }
     }
 

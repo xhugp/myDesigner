@@ -17,7 +17,7 @@
             AND  oreq_result = #{oreq.oreqResult}
         </if>
         <if test="oreq.oreqType != null">
-            AND  oreq_result = #{oreq.oreqType}
+            AND  oreq_type = #{oreq.oreqType}
         </if>
         AND oreq_create_time BETWEEN #{oreq.fromTime} AND  #{oreq.toTime}
         ORDER BY oreq_create_time

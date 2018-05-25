@@ -1,7 +1,6 @@
 package com.xhu.dao;
 
 import com.xhu.entity.Demand;
-import com.xhu.entity.User;
 import com.xhu.util.CommonUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class DemandDaoTest {
         for (Demand demand:list) {
             System.out.print(demand);
         }
-        assertEquals(2,list.size());
+        assertEquals(5,list.size());
     }
 
     @Test

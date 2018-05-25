@@ -30,6 +30,21 @@ public class UserController {
         return new ResultBean("200","修改成功");
     }
 
+    @RequestMapping(value = "user/get-id/{userOpenId}",method = RequestMethod.GET)
+    private ResultBean getUserByOpenId(@PathVariable("userOpenId") String userOpenId){
+        return new ResultBean("200",userService.getUserByOpenId(userOpenId),"用户信息");
+    }
+
+    @RequestMapping(value = "user/get-name/{username}",method = RequestMethod.GET)
+    private ResultBean getUserByName(@PathVariable("username") String username){
+        return new ResultBean("200",userService.getUserByName(username),"用户信息");
+    }
+
+    @RequestMapping(value = "user/simple-list/{companyId}",method = RequestMethod.GET)
+    private ResultBean simpleList(@PathVariable("companyId") Integer companyId){
+        return new ResultBean("200",userService.simple_list(companyId),"选择用户信息");
+    }
+
     @RequestMapping(value = "user/list",method = RequestMethod.POST)
     private ResultBean list(@RequestBody Map<String,Object> reqMap){
         Integer currentPage = (Integer) reqMap.get("currentPage");

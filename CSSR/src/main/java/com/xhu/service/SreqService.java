@@ -11,7 +11,7 @@ public interface SreqService {
 
     public void delete(Integer srId);
 
-    public Sreq getLReq(Integer srId);
+    public Sreq getSreq(Integer srId);
 
     public void update(Sreq sreq);
 

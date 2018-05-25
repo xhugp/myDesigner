@@ -90,10 +90,6 @@ public class DemandServiceImpl implements DemandService {
     @Transactional
     public void deleteById(String demandId) {
         try {
-            String state = demandDao.getState(demandId);
-            if(!"3".equals(state) && !"5".equals(state)){
-                throw new DemandException("需求状态不允许删除");
-            }
             demandDao.deleteById(demandId);
         }catch (Exception e){
             throw new DemandException("删除需求信息失败"+e.getMessage());
@@ -145,4 +141,5 @@ public class DemandServiceImpl implements DemandService {
             throw new DemandException(CodeEnum.REUPDATE);
         }
     }
+
 }

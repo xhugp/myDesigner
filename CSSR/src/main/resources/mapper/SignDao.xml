@@ -41,8 +41,8 @@
     </delete>
 
     <insert id="add" parameterType="com.xhu.entity.Sign">
-        INSERT INTO sign(user_id,company_id,signTime,signDate)
-        VALUES (#{userId},#{companyId},#{signTime},#{signDate})
+        INSERT INTO sign(user_id,company_id,sign_time,sign_date,end_date)
+        VALUES (#{userId},#{companyId},#{signTime},#{signDate},#{endDate})
     </insert>
 
 </mapper>

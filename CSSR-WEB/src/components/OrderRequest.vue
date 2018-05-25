@@ -63,7 +63,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              type="success"
+              type="primary"
               @click="handleShowDemand(scope.$index, scope.row)" icon="el-icon-view">查看需求</el-button>
             <el-button
               size="mini"
@@ -99,6 +99,11 @@
           </el-form-item>
           <el-form-item label="需求备注：">
             <span>{{ demand.demandRemark }}</span>
+          </el-form-item>
+          <el-form-item label="图片：">
+            <div class="imgDiv" style="width: 50%">
+              <img :src="demand.demandImg" style="max-width: 100%;max-height: 100%"/>
+            </div>
           </el-form-item>
           <el-form-item label="创建时间：">
             <span>{{ demand.createTime }}</span>
@@ -145,10 +150,10 @@
               name:'已拒绝'
             }],
             optionType:[{
-              id:'1',
+              id:'2',
               name:'中断请求'
             },{
-              id:'2',
+              id:'1',
               name:'结束请求'
             }],
             oreqs:[],
@@ -262,10 +267,31 @@
             });
           },
           handleDelete(index,row){
+            this.$confirm('确定删除请求记录?不影响订单状态', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              //请求删除订单请求
+              this.$http.delete('/api/oreq/'+row.oreqId).then((res)=>{
+                if(res.body.code == '200'){
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  });
+                  this.oreqs.pop(row);
+                }else{
+                  console.log(res);
+                  this.$message.error("删除失败");
+                }
+              });
+            }).catch(() => {
 
+            });
           },
           handleCurrentChange(val){
-
+            this.sendData.currentPage = val;
+            this.submitForm();
           },
           resetForm() {
             this.searchForm.searchTime=[];

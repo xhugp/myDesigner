@@ -263,6 +263,7 @@
                   });
                   this.dialogFormVisible = false;
                   this.$refs[newTool].resetFields();
+                  this.submitForm();
                 }else{
                   this.$message.error('添加失败，稍后再试');
                   console.log(res);

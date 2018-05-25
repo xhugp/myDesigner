@@ -20,7 +20,7 @@
             AND company_id = #{lease.companyId}
         </if>
         AND create_time BETWEEN #{lease.fromTime} AND  #{lease.toTime}
-        ORDER BY lease_id
+        ORDER BY create_time DESC
         <if test=" index != null and size != null">
             limit #{index},#{size}
         </if>
@@ -32,10 +32,10 @@
         WHERE lease_id = #{leaseId}
     </select>
 
-    <select id="getLeaseByTool" resultType="com.xhu.entity.Lease">
+    <select id="getLeaseByTool" resultType="com.xhu.entity.Lease" parameterType="com.xhu.entity.Lease">
         SELECT *
         FROM lease
-        WHERE tool_id = #{toolId}
+        WHERE tool_id = #{toolId} AND lease_state = #{leaseState}
     </select>
 
     <select id="getLeaseByUser" resultType="com.xhu.entity.Lease">

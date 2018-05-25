@@ -19,9 +19,55 @@
 
             <el-form-item>
               <el-button @click="submitForm('newCompany')" type="primary" :disabled="isDisable">提交修改</el-button>
+              <el-button @click="dialogFormVisible=true" type="primary" v-if="manageRole==0">添加管理员</el-button>
+              <el-button @click="dialogTypeVisible=true" type="primary" v-if="manageRole==0">添加类别</el-button>
             </el-form-item>
           </el-form>
         </el-aside>
+
+        <el-dialog title="添加管理员" :visible.sync="dialogFormVisible" width="500px">
+          <el-form :model="newManage" ref="newManage" class="demo-ruleForm">
+            <el-form-item label="管理员登录名" :label-width="formLabelWidth" prop="toolName">
+              <el-input v-model="newManage.manageName" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="管理员角色" :label-width="formLabelWidth" prop="toolType">
+              <el-select v-model="newManage.manageRole" placeholder="选择类别搜索">
+                <el-option
+                  v-for="item in roles"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="addManage">添 加</el-button>
+          </div>
+        </el-dialog>
+
+        <el-dialog title="添加类别" :visible.sync="dialogTypeVisible" width="500px">
+          <el-form :model="newType" ref="newType" class="demo-ruleForm">
+            <el-form-item label="添加选择" :label-width="formLabelWidth">
+              <el-select v-model="newType.type" placeholder="选择类别添加">
+                <el-option
+                  v-for="item in types"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="类型名称" :label-width="formLabelWidth" prop="name">
+              <el-input v-model="newType.name" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="addType">添 加</el-button>
+          </div>
+        </el-dialog>
+
+
         <el-main>
           <el-amap vid="amapDemo"
                    :center="center"
@@ -49,16 +95,43 @@
     };
     return {
       markers: [],
+      newType:{
+        type:'',
+        name:''
+      },
+      types:[{
+        id:1,
+        name:'管理员角色'
+      },{
+        id:2,
+        name:'需求类型'
+      },{
+        id:3,
+        name:'工具类型'
+      },{
+        id:4,
+        name:'招聘类型'
+      }],
       isDisable:true,
       zoom: 12,
       center: [116.39,39.9],
       address: '',
+      roles:[],
+      manageRole:sessionStorage.getItem("manageRole"),
+      formLabelWidth:'100px',
       newCompany:{
         companyName:'',
         companyAddress:'',
         companyPhone:'',
         companyEmail:''
       },
+      newManage:{
+        manageName:'',
+        manageRole:0,
+        companyId:sessionStorage.getItem("companyId")
+      },
+      dialogFormVisible:false,
+      dialogTypeVisible:false,
       plugin: ['ToolBar', {
         pName: 'MapType',
         defaultType: 0,
@@ -122,6 +195,13 @@
           this.newCompany = res.body.data;
         }
       });
+
+    this.$http.get('/api/get-role').then((res)=>{
+      if(res.body.code == '200'){
+        this.roles = res.body.data;
+        console.log(res);
+      }
+    });
   },
     methods:{
       submitForm(newCompany) {
@@ -154,6 +234,56 @@
         } else {
           return true;
         }
+      },
+      addType(){
+        let url = '';
+        if(this.newType.type == 1){
+          url = '/api/add-role-type'
+        }else if(this.newType.type == 2){
+          url = '/api/add-dtype'
+        }else if(this.newType.type == 3){
+          url = '/api/add-ttype'
+        }else if(this.newType.type == 4){
+          url = '/api/add-rtype'
+        }else {
+          this.$message.error("请选择添加类别");
+          return;
+        }
+        this.$http.post(url,this.newType).then((res)=>{
+          if(res.body.code=='200'){
+            this.$message({
+              type:'success',
+              message:'添加成功'
+            });
+            this.dialogTypeVisible = false;
+          }else{
+            this.$message.error(res.body.msg);
+            console.log(res);
+          }
+        });
+      },
+      addManage(){
+        if(this.newManage.manageName<3){
+          this.$message({
+            type:'warning',
+            message:'账号名不少于三位'
+          });
+          return;
+        }
+        console.log(this.newManage);
+        this.$http.post("/api/manage/add",this.newManage).then((res)=>{
+          if(res.body.code=='200'){
+            this.$message({
+              type:'success',
+              message:'添加成功'
+            });
+            this.dialogFormVisible = false;
+          }else{
+            this.$message.error(res.body.msg);
+            console.log(res);
+          }
+        });
+
       }
     }
 

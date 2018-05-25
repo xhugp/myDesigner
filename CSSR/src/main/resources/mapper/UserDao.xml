@@ -17,6 +17,12 @@
         WHERE user_name = #{userName}
     </select>
 
+    <select id="getUserByOpenId" resultType="com.xhu.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_open_id = #{openId}
+    </select>
+
     <select id="getCount" resultType="int" parameterType="com.xhu.entity.User">
         SELECT count(1)
         FROM user
@@ -49,6 +55,13 @@
         <if test=" index != null  and size != null">
             limit #{index},#{size}
         </if>
+    </select>
+
+    <select id="simple_list" resultType="com.xhu.entity.User">
+        SELECT user_id,user_mc
+        FROM user
+        WHERE company_id = #{companyId}
+        ORDER BY user_id
     </select>
 
     <select id="list_lately" resultType="com.xhu.entity.User" parameterType="java.util.HashMap">

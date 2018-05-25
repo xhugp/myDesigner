@@ -19,7 +19,7 @@
             AND company_id = #{order.companyId}
         </if>
         AND create_time BETWEEN #{order.fromTime} AND  #{order.toTime}
-        ORDER BY order_id
+        ORDER BY last_update_time DESC
         <if test=" index != null and size != null">
             limit #{index},#{size}
         </if>
@@ -28,6 +28,12 @@
         SELECT * FROM orders
         WHERE order_id = #{orderId}
     </select>
+
+    <select id="getOrderByDemand" resultType="com.xhu.entity.Order">
+        SELECT * FROM orders
+        WHERE demand_id = #{demandId}
+    </select>
+
     <select id="getCount" resultType="int" parameterType="com.xhu.entity.Order">
         SELECT count(1)
         FROM orders

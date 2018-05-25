@@ -148,6 +148,18 @@ public class GobalExceptionHandler {
     }
 
     /**
+     * 处理Rreq异常
+     * @param req
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = RreqException.class)
+    @ResponseBody
+    private ResultBean RreqExceptionHandler(HttpServletRequest req, RreqException e){
+        return new ResultBean(e.getCode(),e.getMes());
+    }
+
+    /**
      * 处理Sreq异常
      * @param req
      * @param e

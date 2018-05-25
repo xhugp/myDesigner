@@ -11,6 +11,7 @@ public class Demand {
     private Integer demandType;
     private String demandTitle;
     private String demandContent;
+    private String demandImg;
     private String demandRemark;
     private Float demandRepay;
     private String demandState;
@@ -145,6 +146,14 @@ public class Demand {
         this.demandState = demandState;
     }
 
+    public String getDemandImg() {
+        return demandImg;
+    }
+
+    public void setDemandImg(String demandImg) {
+        this.demandImg = demandImg;
+    }
+
     @Override
     public String toString() {
         return "Demand{" +
@@ -152,6 +161,7 @@ public class Demand {
                 ", demandType=" + demandType +
                 ", demandTitle='" + demandTitle + '\'' +
                 ", demandContent='" + demandContent + '\'' +
+                ", demandImg='" + demandImg + '\'' +
                 ", demandRemark='" + demandRemark + '\'' +
                 ", demandRepay=" + demandRepay +
                 ", demandState='" + demandState + '\'' +

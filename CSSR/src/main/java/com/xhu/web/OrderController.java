@@ -40,6 +40,16 @@ public class OrderController {
         return new ResultBean("200",orderService.getDemand(orderId),"订单对应需求信息");
     }
 
+    @RequestMapping(value = "/order/{orderId}",method = RequestMethod.GET)
+    private ResultBean getOrder(@PathVariable("orderId") String orderId){
+        return new ResultBean("200",orderService.getOrder(orderId),"订单信息");
+    }
+
+    @RequestMapping(value = "/order/by-demand/{demandId}",method = RequestMethod.GET)
+    private ResultBean getOrderByDemand(@PathVariable("demandId") String demandId){
+        return new ResultBean("200",orderService.getOrderByDemand(demandId),"需求对应的订单信息");
+    }
+
     @RequestMapping(value = "/order/delete",method = RequestMethod.DELETE)
     private ResultBean delete(@PathVariable String orderId){
         orderService.delete(orderId);

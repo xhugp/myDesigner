@@ -86,8 +86,14 @@ public class ManageServiceImpl implements ManageService{
     @Override
     @Transactional
     public boolean add(Manage manage) {
+
+        if(manageDao.queryByName(manage.getManageName())!=null){
+            throw new ManageException("账号重复！");
+        }
         manage.setCreateTime(commonUtil.dateToString(new Date()));
         manage.setLastLoginTime(commonUtil.dateToString(new Date()));
+        manage.setManagePwd("123456");//设置初始密码
+
         int result = manageDao.add(manage);
         if(result > 0){
             return true;

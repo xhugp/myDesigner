@@ -25,6 +25,7 @@ public class OreqController {
         Integer pageSize = (Integer) reqMap.get("pageSize");
         JSONObject json = JSONObject.fromObject(reqMap.get("oreq"));
         Oreq oreq = (Oreq) JSONObject.toBean(json,Oreq.class);
+        System.out.println(oreq);
         PageBean pageBean = oreqService.list(currentPage,pageSize,oreq);
         return new ResultBean("200",pageBean,"订单请求列表");
     }
@@ -52,4 +53,5 @@ public class OreqController {
         oreqService.add(oreq);
         return new ResultBean("200",null,"请求结果");
     }
+
 }

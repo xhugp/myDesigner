@@ -13,6 +13,8 @@ public interface UserService {
 
     public PageBean<User> latelyUsers(Integer currentPage,Integer size,Integer companyId);
 
+    public List<User> simple_list(Integer companyId);
+
     public void add(User user);
 
     public void update(User user);
@@ -20,6 +22,10 @@ public interface UserService {
     public void delete(Integer userId);
 
     public User getUser(Integer userId);
+
+    public User getUserByName(String username);
+
+    public User getUserByOpenId(String userOpenId);
 
     public int getCount(User user);
 
